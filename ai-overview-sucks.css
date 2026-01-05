@@ -1,0 +1,34 @@
+/* Ensure the CSS only targets Google Search AI Overview components */
+
+/* Main AI Overview container (scoped to Google's search results) */
+div.WAUd4.OZ9ddf,
+div.Beswgc,  /* Common dynamic class mentioned in recent blockers */
+div.hdzaWe,  /* Another frequently reported class for the AI box */
+div[data-content-feature="ai_overview"] {  /* Stable data attribute if present */
+    display: none !important;
+}
+
+/* AI content blocks and wrappers specific to Google's search */
+div.FR7ZSc.NQYJvc.btku5b.in7vHe > div.SlP8xc.VDgVie.niO4u,
+div[data-testid="ai-overview"] {
+    display: none !important;
+}
+
+/* AI-generated sections and follow-ups */
+div.C6AK7c.XVMlrc > div.mVH5Fc > div.R1QWuf {
+    display: none !important;
+}
+
+/* AI Mode button/tab (specific to Google's interface) */
+div[aria-label="AI Mode"],
+div[role="tab"][data-tab-id="ai"],
+button[aria-label*="AI Mode"],
+div[aria-label*="AI Overview"] {
+    display: none !important;
+}
+
+/* Fallback: Hide any large top section containing AI text (heuristic) */
+div > div:contains("AI Overview"),
+g-section-with-header:has(h2:contains("AI Overview")) {
+    display: none !important;
+}
