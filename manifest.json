@@ -1,0 +1,26 @@
+{
+    "manifest_version": 3,
+    "name": "Banished",
+    "version": "1.10104",
+    "description": "Banished.",
+    "permissions": [
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.google.com/search*"],
+      "css": ["google-games-suck.css", "ai-overview-sucks.css"],
+      "run_at": "document_start"
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [{
+      "id": "blocker_rules",
+      "enabled": true,
+      "path": "rules.json"
+    }]
+  }
+}
