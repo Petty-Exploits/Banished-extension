@@ -1,5 +1,6 @@
 # Banished
-Old ass description go look at the stores description im too lazy to copy pasta 
+# Old ass description go look at the stores description im too lazy to copy pasta 
+
 A lightweight Chrome extension to banish distractions in educational environments by blocking Google Doodle games, hiding AI Overviews in search results, and enforcing a whitelist of approved educational sites via network rules.
 
 **Name:** Banished  
