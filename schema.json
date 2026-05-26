@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "exemptDomains": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "extraBannedPatterns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "blockedSpoofTitles": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "bannedBookmarkPatterns": {
+      "title": "Banned Bookmark Patterns",
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "nukeBookmarks": {
+      "title": "Nuke Bookmarks",
+      "description": "Set to true to immediately delete banned bookmarks",
+      "type": "boolean"
+    },
+    "adminNotification": {
+      "title": "Admin Notification",
+      "description": "Custom message shown to students on policy update",
+      "type": "string"
+    },
+    "nukeAllBookmarks": {
+  "title": "Nuke All Bookmarks",
+  "description": "Set to true to delete ALL bookmarks except whitelisted ones",
+  "type": "boolean"
+},
+"allowedBookmarks": {
+  "title": "Allowed Bookmarks (Whitelist)",
+  "description": "Bookmarks with these URLs or titles will be preserved during nuke",
+  "type": "array",
+  "items": { "type": "string" }
+},
+    "enableProxyDetection": { "type": "boolean", "default": true },
+    "enableConsoleDetection": { "type": "boolean", "default": true },
+    "enableTitleSpoofDetection": { "type": "boolean", "default": true },
+    "enableExtraBannedPatterns": { "type": "boolean", "default": true },
+    "antiAICopyEnabled": { "type": "boolean", "default": true },
+    "enableSlopClipboardReplacement": { "type": "boolean", "default": true },
+    "slopClipboardReplacement": { "type": "string", "default": "Please do something productive instead" },
+    "aiBlockedDomains": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}
