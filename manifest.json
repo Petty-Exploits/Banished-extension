@@ -1,21 +1,61 @@
 {
+  
     "manifest_version": 3,
     "name": "Banished",
-    "version": "1.10104",
-    "description": "Banished.",
+    "version": "1.10208",
+    "minimum_chrome_version": "109",
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "description": "Ipse cogita.",
+    "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
     "permissions": [
-    "declarativeNetRequest"
-  ],
+    "declarativeNetRequest",
+    "storage",
+    "tabs",
+    "bookmarks"  ],
   "host_permissions": [
     "<all_urls>"
   ],
+  "storage": {
+        "managed_schema": "schema.json"
+    },
   "content_scripts": [
     {
       "matches": ["*://*.google.com/search*"],
+      "exclude_matches": [
+    "*://*.google.com/search?*udm=2*",
+    "*://*.google.com/search?*tbm=isch*"
+      ],
       "css": ["google-games-suck.css", "ai-overview-sucks.css"],
       "run_at": "document_start"
-    }
-  ],
+    },
+    {
+      "matches": ["<all_urls>"],
+    "exclude_matches": [
+      
+
+    ],
+    "js": ["content-main.js"],
+    "run_at": "document_start",
+    "all_frames": true,
+    "match_about_blank": true,
+    "world": "MAIN"
+  },
+  {
+    "matches": ["<all_urls>"],
+    "exclude_matches": [
+     
+ 
+      ],
+    "js": ["content.js"],
+    "run_at": "document_start",
+    "all_frames": true,
+    "match_about_blank": true
+  }
+
+],
   "declarative_net_request": {
     "rule_resources": [{
       "id": "blocker_rules",
