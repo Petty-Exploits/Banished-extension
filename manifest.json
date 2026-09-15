@@ -2,13 +2,16 @@
   
     "manifest_version": 3,
     "name": "Banished",
-    "version": "1.10208",
+    "version": "1.10212",
     "minimum_chrome_version": "109",
     "update_url": "https://clients2.google.com/service/update2/crx",
     "description": "Ipse cogita.",
     "background": {
     "service_worker": "background.js",
     "type": "module"
+  },
+  "action": {
+    "default_title": "Banished"
   },
     "permissions": [
     "declarativeNetRequest",
@@ -34,7 +37,26 @@
     {
       "matches": ["<all_urls>"],
     "exclude_matches": [
-      
+      "*://*.schoology.com/*",
+      "*://schoology.com/*",
+      "*://*.powerschool.com/*",
+      "*://powerschool.com/*",
+      "*://*.infinitecampus.com/*",
+      "*://infinitecampus.com/*",
+      "*://*.ixl.com/*",
+      "*://ixl.com/*",
+      "*://*.papercut.isd728.org/*",
+      "*://papercut.isd728.org/*",
+      "*://*.papercut.com/*",
+      "*://papercut.com/*",
+    "*://isd728.us002-rapididentity.com/*",           
+      "*://accounts.google.com/*",
+      "*://*.googleusercontent.com/*",
+      "*://*.google.com/*",
+      "*://collection.mndigital.org/*",
+      "*://challenges.cloudflare.com/*",
+      "*://youtube.com/*",
+      "*://*.gov/*"
 
     ],
     "js": ["content-main.js"],
@@ -46,7 +68,26 @@
   {
     "matches": ["<all_urls>"],
     "exclude_matches": [
-     
+      "*://*.schoology.com/*",
+      "*://schoology.com/*",
+      "*://*.powerschool.com/*",
+      "*://powerschool.com/*",
+      "*://*.infinitecampus.com/*",
+      "*://infinitecampus.com/*",
+      "*://*.ixl.com/*",
+      "*://ixl.com/*",
+      "*://*.papercut.isd728.org/*",
+      "*://papercut.isd728.org/*",
+      "*://*.papercut.com/*",
+      "*://papercut.com/*",
+       "*://isd728.us002-rapididentity.com/*",
+      "*://accounts.google.com/*",
+      "*://*.googleusercontent.com/*",
+      "*://*.google.com/*",
+      "*://collection.mndigital.org/*",
+      "*://challenges.cloudflare.com/*",
+      "*://youtube.com/*",
+      "*://*.gov/*"
  
       ],
     "js": ["content.js"],

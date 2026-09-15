@@ -25,10 +25,22 @@
       "type": "boolean"
     },
     "adminNotification": {
-      "title": "Admin Notification",
-      "description": "Custom message shown to students on policy update",
-      "type": "string"
-    },
+  "title": "Admin Notification",
+  "description": "Custom message shown to students on policy update",
+  "type": "string"
+},
+"adminNotificationStyle": {
+  "title": "Admin Notification Style",
+  "description": "Visual preset for admin push notifications: normal, alert, or chaos",
+  "type": "string",
+  "default": "normal"
+},
+"chaosRedirectUrl": {
+  "title": "Chaos Mode Redirect URL",
+  "description": "The URL to redirect tabs to when adminNotificationStyle is set to 'chaos'.",
+  "type": "string",
+  "default": "https://example.com/"
+},
     "nukeAllBookmarks": {
   "title": "Nuke All Bookmarks",
   "description": "Set to true to delete ALL bookmarks except whitelisted ones",
@@ -50,6 +62,24 @@
     "aiBlockedDomains": {
       "type": "array",
       "items": { "type": "string" }
-    }
+    },
+"enableEasterEgg": {
+  "title": "Enable Easter Egg",
+  "description": "Allows the extension icon click easter egg. Default is false.",
+  "type": "boolean",
+  "default": false
+},
+"easterEggText": {
+  "title": "Easter Egg Text",
+  "description": "Text that replaces all page text when the easter egg runs",
+  "type": "string",
+  "default": "BANISHED!"
+},
+"easterEggImageUrl": {
+  "title": "Easter Egg Image URL",
+  "description": "Image that replaces all page images when the easter egg runs",
+  "type": "string",
+  "default": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGroHW8EnS4DOb4k6pb_ZpZj-KLVp4G2y5wiZSe4t6gg&s=10"
+}
   }
 }

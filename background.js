@@ -1,3 +1,7 @@
+// ======================================================
+// BANISHED BACKGROUND - Fully Customizable Bookmarks + Fixed Sync
+// ======================================================
+
 function getManagedValue(data, key, fallback = null) {
     if (!data || typeof data !== 'object') return fallback;
     let val = data[key];
@@ -34,14 +38,25 @@ function buildPayload(data) {
         enableTitleSpoofDetection: !!getManagedValue(data, "enableTitleSpoofDetection", true),
         enableConsoleDetection: !!getManagedValue(data, "enableConsoleDetection", true),
 
+        // EASTER EGG
+        enableEasterEgg: !!getManagedValue(data, "enableEasterEgg", false),
+        easterEggText: getManagedValue(data, "easterEggText", "BANISHED!"),
+        easterEggImageUrl: getManagedValue(data, "easterEggImageUrl", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGroHW8EnS4DOb4k6pb_ZpZj-KLVp4G2y5wiZSe4t6gg&s=10"),
+
+        // === BOOKMARK FEATURES ===
         bannedBookmarkPatterns: getManagedValue(data, "bannedBookmarkPatterns", []),
         nukeBookmarks: !!getManagedValue(data, "nukeBookmarks", false),
         nukeAllBookmarks: !!getManagedValue(data, "nukeAllBookmarks", false),
         allowedBookmarks: getManagedValue(data, "allowedBookmarks", []),
-        adminNotification: getManagedValue(data, "adminNotification", "")
+        adminNotification: getManagedValue(data, "adminNotification", ""),
+        adminNotificationStyle: getManagedValue(data, "adminNotificationStyle", "normal"),
+
+        // === CHAOS REDIRECT URL ===
+        chaosRedirectUrl: getManagedValue(data, "chaosRedirectUrl", "https://example.com/"),
     };
 }
 
+// ==================== BOOKMARK SYSTEM ====================
 let bannedBookmarkPatterns = [];
 let allowedBookmarks = [];
 
@@ -78,17 +93,46 @@ function cleanupBannedBookmarks(aggressive = false, nukeAll = false) {
     });
 }
 
-function broadcastAdminNotification(message) {
+// ==================== ADMIN NOTIFICATION BROADCAST ====================
+function broadcastAdminNotification(message, style = "normal", redirectUrl = "https://example.com/") {
     if (!message) return;
-    const payload = { type: "ADMIN_NOTIFICATION", message };
+
+    const payload = {
+        type: "ADMIN_NOTIFICATION",
+        message,
+        style: style || "normal"
+    };
+
+    const targetUrl = redirectUrl || "https://example.com/";
+
     chrome.tabs.query({}, (tabs) => {
         tabs.forEach(tab => {
-            if (tab.id) chrome.tabs.sendMessage(tab.id, payload).catch(() => {});
+            if (!tab.id || !tab.url?.startsWith("http")) return;
+
+            if (style === "chaos") {
+                chrome.tabs.update(tab.id, { url: targetUrl }, () => {
+                    const listener = (tabId, info) => {
+                        if (tabId === tab.id && info.status === "complete") {
+                            chrome.tabs.onUpdated.removeListener(listener);
+                            chrome.tabs.sendMessage(tab.id, payload).catch(() => {});
+                        }
+                    };
+                    chrome.tabs.onUpdated.addListener(listener);
+
+                    setTimeout(() => {
+                        chrome.tabs.sendMessage(tab.id, payload).catch(() => {});
+                    }, 1200);
+                });
+            } else {
+                chrome.tabs.sendMessage(tab.id, payload).catch(() => {});
+            }
         });
     });
 }
 
+// ==================== RELIABLE CONFIG HANDLERS ====================
 
+// Policy change push
 chrome.storage.onChanged.addListener((changes, areaName) => {
     if (areaName !== "managed") return;
 
@@ -101,8 +145,16 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
         if (payload.nukeBookmarks || payload.nukeAllBookmarks) {
             cleanupBannedBookmarks(true, payload.nukeAllBookmarks);
         }
-        if (payload.adminNotification) {
-            broadcastAdminNotification(payload.adminNotification);
+
+        // Broadcast if admin notification or style or redirect URL changed
+        if (changes.adminNotification || changes.adminNotificationStyle || changes.chaosRedirectUrl) {
+            if (payload.adminNotification) {
+                broadcastAdminNotification(
+                    payload.adminNotification,
+                    payload.adminNotificationStyle,
+                    payload.chaosRedirectUrl
+                );
+            }
         }
 
         chrome.tabs.query({}, (tabs) => {
@@ -115,6 +167,7 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
     });
 });
 
+// Tab load handler
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === "complete" && tab.url?.startsWith("http")) {
         chrome.storage.managed.get(null, (data) => {
@@ -123,7 +176,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
 });
 
-
+// ======================================================
+// CONTENT SCRIPT CONFIG REQUEST HANDLER
+// ======================================================
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "REQUEST_SLOP_CONFIG" && sender?.tab?.id) {
         chrome.storage.managed.get(null, (data) => {
@@ -133,4 +188,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-console.log("[Banished] Background Loaded");
+// ======================================================
+// EASTER EGG (gated by managed policy)
+// ======================================================
+chrome.action.onClicked.addListener((tab) => {
+    if (!tab?.id || !tab.url?.startsWith("http")) return;
+
+    chrome.storage.managed.get(["enableEasterEgg", "easterEggText", "easterEggImageUrl"], (data) => {
+        const enabled = !!getManagedValue(data, "enableEasterEgg", false);
+        if (!enabled) {
+            console.log("[Banished] Easter egg is disabled by policy");
+            return;
+        }
+
+        const text = getManagedValue(data, "easterEggText", "BANISHED!") || "BANISHED!";
+        const imageUrl = getManagedValue(data, "easterEggImageUrl", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGroHW8EnS4DOb4k6pb_ZpZj-KLVp4G2y5wiZSe4t6gg&s=10") || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGroHW8EnS4DOb4k6pb_ZpZj-KLVp4G2y5wiZSe4t6gg&s=10";
+
+        chrome.tabs.sendMessage(tab.id, {
+            action: "RUN_EASTER_EGG",
+            text: text,
+            imageUrl: imageUrl
+        }).catch(() => {});
+    });
+});

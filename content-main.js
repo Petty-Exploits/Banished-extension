@@ -1,6 +1,6 @@
 (function () {
     if (window.NUKED === true) return;
-
+//  yt exemption for console hunter
 const hostname = window.location.hostname.toLowerCase().trim();
 if (hostname.includes('youtube.com') || 
     hostname.includes('youtu.be')) {
@@ -8,9 +8,9 @@ if (hostname.includes('youtube.com') ||
     console.log(`[MAIN] 🚪 Hard exit - YouTube/Google detected on ${hostname}`);
     return;                    
 }
-
-
-
+    // =======================
+    // GLOBALS & CONFIG
+    // =======================
     let exemptDomains = [];
     let isExemptCached = false;
     let configLoaded = false;
@@ -28,16 +28,17 @@ if (hostname.includes('youtube.com') ||
         ]
     };
 
+    // Proxy detection helpers 
     const isFetchHijacked = window.fetch?.toString && window.fetch.toString().indexOf('[native code]') === -1;
     const isXHRHijacked = window.XMLHttpRequest?.prototype?.open?.toString && window.XMLHttpRequest.prototype.open.toString().indexOf('[native code]') === -1;
-
+    // Proxy Regex 
     const BANNED_PATTERNS = [
         /proxy/i, /unblocker/i, /holyunblocker/i, /holy-unblocker/i,
         /interstellar/i, /dogeunblocker/i, /monkeunblocker/i, /epoxy/i,
         /bare-mux/i, /scramjet/i, /wisp/i, /uv\./i, /rammerhead/i,
         /infamous/i, /mercuryworkshop/i
     ];
-
+// Anti game/proxy html copy pasta
 const viewerLaunchSignatures = [
     "about:blank", "about:srcdoc", "about:src",
     "window.open('about:blank'", "window.open(\"about:blank\"",
@@ -48,8 +49,9 @@ const viewerLaunchSignatures = [
     "window.open(", "open(", "_blank", "noopener", "noreferrer"
 ]
 
-
-
+    // =======================
+    // MATCHING ENGINE
+    // =======================
     function matchesPattern(input, pattern) {
     if (!pattern || !input) return false;
 
@@ -64,8 +66,9 @@ const viewerLaunchSignatures = [
     return new RegExp(regexString, 'i').test(target);
 }
 
-
-
+// =======================
+// UPDATE EXEMPT STATUS (Improved)
+// =======================
 function updateExemptStatus() {
     isExemptCached = false;
     const hostname = window.location.hostname.toLowerCase().trim();
@@ -75,6 +78,7 @@ function updateExemptStatus() {
         matchesPattern(hostname, p) || matchesPattern(fullUrl, p)
     );
 
+    // Force exempt
     if (hostname.includes('.gov')) {
         isExemptCached = true;
     }
@@ -84,7 +88,8 @@ function updateExemptStatus() {
     }
 }
 
-
+// =======================
+// CONFIG SYNC (Replace your current message listener)
 window.addEventListener("message", (event) => {
     if (event.source !== window || !event.data) return;
     if (event.data.type === "ADMIN_NOTIFICATION") {
@@ -124,14 +129,17 @@ window.addEventListener("message", (event) => {
     }
 });
 
-
-
+// =======================
+// DEFENSE HEARTBEAT SYNC LOOP
+// =======================
 function requestConfig() {
     window.postMessage({ type: "REQUEST_SLOP_CONFIG" }, "*");
 }
 
+// Spark bootstrap loop early
 setTimeout(() => requestConfig(), 100);
 
+// Rapid verification heartbeat
 setInterval(() => {
     if (window.NUKED) return;
     
@@ -145,8 +153,9 @@ setInterval(() => {
 
 console.log("[MAIN] Heartbeat Loaded");
 
-
-
+    // =======================
+    // NUCLEAR TOAST 
+    // =======================
     function showSlopNotification(message, type = 'ai') {
         if (isExemptCached) return;
 
@@ -186,8 +195,9 @@ console.log("[MAIN] Heartbeat Loaded");
         }, 5000);
     }
 
-
-
+    // =======================
+    // GAME SLOP / MALICIOUS PASTE DETECTION
+    // =======================
     function checkForSlopPaste(e) {
         if (!configLoaded || isExemptCached || window.NUKED || !slopConfig.enabled) return;
 
@@ -218,8 +228,9 @@ console.log("[MAIN] Heartbeat Loaded");
         }
     }
 
-
-
+    // =======================
+    // AI DOMAIN CHECK HELPER
+    // =======================
     function isAIDomain() {
         if (!slopConfig.antiAICopyEnabled) return false;
         const hostname = window.location.hostname.toLowerCase().trim();
@@ -230,8 +241,9 @@ console.log("[MAIN] Heartbeat Loaded");
             );
     }
 
-
-
+    // =======================
+    // PASTE + GAME SLOP HANDLER
+    // =======================
     document.addEventListener('paste', (e) => {
         if (!configLoaded || isExemptCached || window.NUKED || !slopConfig.antiAICopyEnabled) return;
 
@@ -244,8 +256,9 @@ console.log("[MAIN] Heartbeat Loaded");
         }
     }, true);
 
-
-
+    // =======================
+    // COPY / CUT
+    // =======================
     ['copy', 'cut'].forEach(eventType => {
         document.addEventListener(eventType, (e) => {
             if (!configLoaded || isExemptCached || window.NUKED || !slopConfig.antiAICopyEnabled) return;
@@ -260,8 +273,9 @@ console.log("[MAIN] Heartbeat Loaded");
         }, true);
     });
 
-
-
+    // =======================
+    // KEYBOARD SHORTCUTS (Ctrl+C/V/X)
+    // =======================
     document.addEventListener('keydown', (e) => {
         if (!configLoaded || isExemptCached || window.NUKED || !slopConfig.antiAICopyEnabled) return;
         if (!isAIDomain()) return;
@@ -280,7 +294,9 @@ console.log("[MAIN] Heartbeat Loaded");
         }
     }, true);
 
-  
+    // =======================
+    // CLICK INTERCEPTOR FOR COPY BUTTONS
+    // =======================
     function isCopyElement(el) {
         if (!el || !el.tagName || el === window || el === document) return false;
         
@@ -326,7 +342,9 @@ console.log("[MAIN] Heartbeat Loaded");
         }, true);
     });
 
-
+    // =======================
+    // BUTTON DISABLER
+    // =======================
     function disableAICopyButtons() {
         if (!configLoaded || isExemptCached || !slopConfig.antiAICopyEnabled) return;
         if (!isAIDomain()) return;
@@ -359,7 +377,9 @@ console.log("[MAIN] Heartbeat Loaded");
     window.addEventListener('load', disableAICopyButtons);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) disableAICopyButtons(); });
 
-
+    // =======================
+    // SELECTION PROTECTION (fallback)
+    // =======================
     function protectSelection() {
         if (!configLoaded || isExemptCached || window.NUKED || !slopConfig.antiAICopyEnabled) return;
         if (!isAIDomain()) return;
@@ -392,8 +412,11 @@ console.log("[MAIN] Heartbeat Loaded");
         }
     });
     
-
+// =======================
+// CONSOLE HUNTER - HARDENED 
+// =======================
 function shouldSkipConsoleCheck() {
+    // 1. HARDEST WHITELIST - Check immediately (before anything else)
     const hostname = window.location.hostname.toLowerCase();
     const href = window.location.href.toLowerCase();
     
@@ -401,8 +424,10 @@ function shouldSkipConsoleCheck() {
         return true;
     }
 
+    // 2. Race condition protection
     if (!configLoaded) return true;
 
+    // 3. Normal policy checks
     if (window.NUKED) return true;
     if (!slopConfig.enableConsoleDetection) return true;
     if (isExemptCached) return true;
@@ -410,12 +435,15 @@ function shouldSkipConsoleCheck() {
     return false;
 }
 
-
+// =======================
+// INSTALL CONSOLE HOOKS
+// =======================
 if (slopConfig.enableConsoleDetection) {
     ['log', 'warn', 'error', 'info'].forEach(method => {
         const original = console[method];
         
         console[method] = function (...args) {
+            // Strong check on EVERY console call
             if (shouldSkipConsoleCheck()) {
                 return original.apply(this, args);
             }
@@ -426,6 +454,7 @@ if (slopConfig.enableConsoleDetection) {
                 if (BANNED_PATTERNS.some(p => p.test(msg))) {
                     console.info("[MAIN] Console pattern matched (but skipping block):", msg.substring(0, 100));
                     
+                    // Only trigger actual block if proxy detection is also enabled
                     if (slopConfig.enableProxyDetection) {
                         window.postMessage({ 
                             action: "triggerBlock", 
@@ -445,102 +474,133 @@ if (slopConfig.enableConsoleDetection) {
     console.log("[MAIN] ✅ Console detection is DISABLED by admin policy");
 }
 
-
+// =======================
+// HTML & PROXY SCANNER
+// =======================
 function checkHTMLSignatures() {
     if (!configLoaded || isExemptCached || window.NUKED || !slopConfig.enableProxyDetection) return;
 
+    // === LIMIT SIZE FOR PERFORMANCE ===
     const html = document.documentElement.outerHTML
-        .slice(0, 250000)           // Limit to first ~250KB
+        .slice(0, 250000)
         .toLowerCase();
 
+    // === SEPARATE SCRIPT SCANNING ===
     const scriptContent = Array.from(document.scripts)
         .map(s => (s.src || '') + " " + (s.textContent || ''))
         .join(' ')
         .toLowerCase();
 
+    // Standardized helper to trigger block events uniformly
+    const trigger = (reason) => {
+        console.log("[MAIN] BLOCK TRIGGER:", reason);
+        window.postMessage({
+            action: "triggerBlock",
+            type: "proxy",
+            reason: reason
+        }, "*");
+    };
+
+    // === DIRECT FILE / STRING SIGNATURES ===
     if (html.includes("uv.bundle.js") || scriptContent.includes("uv.bundle.js")) {
-        console.log("[MAIN] BLOCK TRIGGER: uv.bundle.js signature");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "HTML/script signature: uv.bundle.js" }, "*");
-        return;
+        return trigger("HTML/script signature: uv.bundle.js");
     }
 
     if (html.includes("bare-mux") || scriptContent.includes("bare-mux")) {
-        console.log("[MAIN] BLOCK TRIGGER: bare-mux signature");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "HTML/script signature: bare-mux" }, "*");
-        return;
+        return trigger("HTML/script signature: bare-mux");
     }
 
-    if (html.includes("scramjetserviceworker") || scriptContent.includes("scramjetserviceworker")) {
-        console.log("[MAIN] BLOCK TRIGGER: scramjetserviceworker signature");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "HTML/script signature: scramjetserviceworker" }, "*");
-        return;
+    if (html.includes("scramjetserviceworker") || scriptContent.includes("scramjetserviceworker") ||
+        html.includes("scramjet.wasm") || scriptContent.includes("scramjet.wasm") ||
+        html.includes("scramjet.all.js") || scriptContent.includes("scramjet.all.js") ||
+        html.includes("scramjet.sync.js") || scriptContent.includes("scramjet.sync.js")) {
+        return trigger("HTML/script signature: Scramjet");
     }
 
-    if (window.__uv) {
-        console.log("[MAIN] BLOCK TRIGGER: window.__uv global");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "Global: window.__uv" }, "*");
-        return;
-    }
-    if (window.__bareMux) {
-        console.log("[MAIN] BLOCK TRIGGER: window.__bareMux global");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "Global: window.__bareMux" }, "*");
-        return;
-    }
-    if (window.BareMuxConnection) {
-        console.log("[MAIN] BLOCK TRIGGER: window.BareMuxConnection global");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "Global: BareMuxConnection" }, "*");
-        return;
-    }
-    if (window.$scramjetLoadController) {
-        console.log("[MAIN] BLOCK TRIGGER: window.$scramjetLoadController global");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "Global: $scramjetLoadController" }, "*");
-        return;
+    if (html.includes("libcurl-transport") || scriptContent.includes("libcurl-transport") ||
+        html.includes("curltransport") || scriptContent.includes("curltransport") ||
+        html.includes("libcurl.js") || scriptContent.includes("libcurl.js")) {
+        return trigger("HTML/script signature: libcurl-transport");
     }
 
-    const hasServiceWorkerProxy = navigator.serviceWorker?.controller?.scriptURL && 
-        /\/(sw|worker|proxy|unblock|scram|epoxy|bare|jetty|uv) 
-    const hasHijackedNetwork = (isFetchHijacked || isXHRHijacked) && 
-        (html.includes("transport") || html.includes("wisp") || html.includes("bare") || html.includes("proxy"));
+    if (html.includes("proxy-transports") || scriptContent.includes("proxy-transports") ||
+        html.includes("proxy-transport") || scriptContent.includes("proxy-transport")) {
+        return trigger("HTML/script signature: proxy-transports");
+    }
 
-    const hasObfuscatedLoader = html.includes("loadcontroller") || 
-        html.includes("loadworker") || 
-        html.includes("initproxy") || 
+    if (html.includes("epoxy-transport") || scriptContent.includes("epoxy-transport") ||
+        html.includes("epoxy/index.mjs") || scriptContent.includes("epoxy/index.mjs") ||
+        html.includes("@mercuryworkshop/epoxy") || scriptContent.includes("@mercuryworkshop/epoxy")) {
+        return trigger("HTML/script signature: epoxy-transport");
+    }
+
+    // === GLOBAL OBJECT CHECKS ===
+    if (window.__uv || window.__uv$config || typeof window.Ultraviolet === "function") {
+        return trigger("Global: Ultraviolet");
+    }
+    if (window.__bareMux || window.BareMuxConnection || window.BareMux) {
+        return trigger("Global: BareMux");
+    }
+    if (window.$scramjetLoadController || window.$scramjetRequire || window.$scramjetVersion) {
+        return trigger("Global: Scramjet");
+    }
+    if (window.Epoxy || window.EpoxyTransport || typeof window.EpoxyTransport === "function") {
+        return trigger("Global: Epoxy");
+    }
+    if (window.CurlTransport || typeof window.CurlTransport === "function") {
+        return trigger("Global: CurlTransport");
+    }
+    if (window.Rammerhead || window.WispClient) {
+        return trigger("Global: Rammerhead/Wisp");
+    }
+
+    // === AGGRESSIVE GENERIC DETECTION ===
+    const swUrl = navigator.serviceWorker?.controller?.scriptURL || "";
+    const hasServiceWorkerProxy = swUrl &&
+        /\/(sw|worker|proxy|unblock|scram|epoxy|bare|jetty|uv|libcurl|transport)\//i.test(swUrl);
+
+    const hasHijackedNetwork = (isFetchHijacked || isXHRHijacked) &&
+        (html.includes("transport") || html.includes("wisp") || html.includes("bare") ||
+         html.includes("proxy") || html.includes("scramjet") || html.includes("libcurl"));
+
+    const hasObfuscatedLoader =
+        html.includes("loadcontroller") ||
+        html.includes("loadworker") ||
+        html.includes("initproxy") ||
         html.includes("startproxy") ||
         scriptContent.includes("loadcontroller") ||
         scriptContent.includes("loadworker");
 
-    const hasCommonForkCombo = 
+    const hasCommonForkCombo =
         (html.includes("scramjet") && html.includes("client")) ||
         (html.includes("epoxy") && html.includes("transport")) ||
         (html.includes("bare-mux") && html.includes("worker")) ||
+        (html.includes("libcurl") && html.includes("transport")) ||
+        (html.includes("proxy-transport") && html.includes("wisp")) ||
         (scriptContent.includes("scramjet") && scriptContent.includes("client")) ||
-        (scriptContent.includes("epoxy") && scriptContent.includes("transport"));
+        (scriptContent.includes("epoxy") && scriptContent.includes("transport")) ||
+        (scriptContent.includes("libcurl") && scriptContent.includes("transport"));
 
     if (hasServiceWorkerProxy && hasHijackedNetwork) {
-        console.log("[MAIN] BLOCK TRIGGER: Service Worker proxy + hijacked fetch/XHR");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "Service Worker + Network Hijack" }, "*");
-        return;
+        return trigger("Service Worker + Network Hijack");
     }
 
     if (hasObfuscatedLoader && (hasHijackedNetwork || hasCommonForkCombo)) {
-        console.log("[MAIN] BLOCK TRIGGER: Obfuscated loader + network/proxy signals");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "Obfuscated loader + proxy signals" }, "*");
-        return;
+        return trigger("Obfuscated loader + proxy signals");
     }
 
     if (hasCommonForkCombo) {
-        console.log("[MAIN] BLOCK TRIGGER: Common fork combo (scramjet/epoxy/bare-mux)");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "Common fork signature" }, "*");
-        return;
+        return trigger("Common fork signature (scramjet/epoxy/bare-mux/libcurl)");
     }
 
     if (hasServiceWorkerProxy && (html.includes("unblock") || scriptContent.includes("unblock"))) {
-        console.log("[MAIN] BLOCK TRIGGER: Service Worker + unblock keyword");
-        window.postMessage({ action: "triggerBlock", type: "proxy", reason: "Service Worker + unblock keyword" }, "*");
-        return;
+        return trigger("Service Worker + unblock keyword");
     }
 }
 
+    // =======================
+    // BFCACHE PROTECTION
+    // =======================
     window.addEventListener('pageshow', (event) => {
         if (event.persisted) {
             window.postMessage({ action: "RECHECK_ALL" }, "*");
@@ -548,6 +608,10 @@ function checkHTMLSignatures() {
         }
     });
 
+    
+    
+
+    // Also run when selection changes (catches right-click copy)
     document.addEventListener('selectionchange', () => {
         if (window.getSelection()?.toString().length > 30) {
             setTimeout(protectSelection, 50);
