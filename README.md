@@ -1,50 +1,28 @@
-# Banished
-# Old ass description go look at the stores description im too lazy to copy pasta 
+PRIVACY & DATA TRANSPARENCY
 
-A lightweight Chrome extension to banish distractions in educational environments by blocking Google Doodle games, hiding AI Overviews in search results, and enforcing a whitelist of approved educational sites via network rules.
+This extension logs blocked domain metadata strictly to compile aggregate domain safety blocklists for participating school administrators. No student PII (names, emails, IP addresses) or general browsing history on permitted sites is ever monitored, stored, or sold.
 
-**Name:** Banished  
-**Version:** 1.10104  
-**Author:** Petty  
 
-## Description
+Banished - School Chromebook Proxy & Distraction Blocker
 
-A bandaid to the rampant gaming and distractions students engage in within school environments.
+A lightweight but powerful extension designed to help school IT departments enforce acceptable use policies on managed Chromebooks.
 
-## Features
+Key Features:
+• Advanced detection and blocking of common proxy tools and circumvention sites
+• Title spoofing protection - prevents students from hiding non-educational tabs
+• Admin-controlled allow/block lists via Google Workspace managed storage (JSON policy)
+• Custom block page with school policy reference
+• Optional clipboard protection and anti-AI copy features
+• Console-based proxy signature detection
+• Added bookmark management functionality
+• Added Optional Easter Egg flag on clicking the extension icon defaults to false, can be changed in admin .json 
+• Updated EE to be changed via admin .json
+• Added a Form to collect blocked urls, and reasons -- for compiling proxy blacklists for other admins.
+• Fixed the Admin Push notification feature and added 3 message presets (Normal, Alert, and a Chaotic)
 
-### Google Search Enhancements
-- Automatically redirects all Google searches to use the `?udm=14` parameter, forcing traditional web results and disabling AI-generated features.
-- Injects CSS to completely hide AI Overviews (targets classes like `.WAUd4.OZ9ddf`, `.Beswgc`, data attributes, and more).
-- Blocks interactive Google Doodle games and full-screen overlays (hides iframes, canvases, close buttons, and high z-index elements like `div[jsname="lJ2blc"]`).
 
-### Declarative Net Request Rules
-- Massive whitelist of trusted educational and safe domains (hundreds of entries including `edpuzzle.com`, `education.com`, `study.com`, `history.com`, `discovery.com`, `factcheck.org`, `goodreads.com`, `pbs.org`, `foodnetwork.com`, `ebay.com`, `ancestryclassroom.com`, and many more).
-- Uses "allow" rules with higher priority to ensure access to approved sites in restricted networks.
-- Includes humorous/test rules for encoded "get a job" / "touch grass" strings.
+Fully configurable through Google Admin console policy - no need to update and republish the extension for every change.
 
-### Minimalist Design
-- No popup, no admin panel, no extra UI — pure background blocking for maximum simplicity and minimal overhead.
+Perfect for K-12 environments looking for an extra layer of control beyond traditional web filters.
 
-## Installation
-
-Load as an unpacked extension in Chrome or Edge (enable Developer Mode) or deploy via group policy for managed devices.
-
-## Permissions
-
-- `declarativeNetRequest` – for rule-based redirects and allows
-- `<all_urls>` – required for content script injection and rule application
-
-## Privacy
-
-No data storage, no logging, no external communication — everything is handled locally and rule-based.
-
-## Contributing
-
-Feel free to steal any code you need to keep bullying students trying to bypass content filters. Pull requests welcome for new rules, CSS improvements, or additional educational domains.
-
----
-
-Made by Petty.
-
----
+Note: This extension is intended for use on school-managed devices with proper administrative permissions.
